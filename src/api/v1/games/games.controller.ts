@@ -53,7 +53,7 @@ export const edit = async (
   try {
     const updatedGame = await Game.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    })
+    }).populate('publisher')
 
     res.send(updatedGame)
   } catch (e) {
