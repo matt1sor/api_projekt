@@ -2,10 +2,15 @@ import { Request, Response } from 'express'
 
 import Game from '../../../db/models/game'
 import type { GameType } from './games.types'
+import { ReqWithFindParams } from '../../../middleware/query'
 
 export const list = async (req: Request, res: Response) => {
   try {
-    const games = await Game.find({})
+    const games = await Game.find(
+      {},
+      null,
+      (req as unknown as ReqWithFindParams).findParams
+    )
 
     res.json(games)
   } catch (e) {
@@ -15,7 +20,10 @@ export const list = async (req: Request, res: Response) => {
   }
 }
 
-export const details = async (req: Request<{ id: string }>, res: Response) => {
+export const details = async (
+  req: Request<{ id: string }, {}, {}, {}>,
+  res: Response
+) => {
   try {
     const game = await Game.findById(req.params.id).populate('publisher')
 

@@ -3,10 +3,15 @@ import { Request, Response } from 'express'
 import Publisher from '../../../db/models/publisher'
 import Game from '../../../db/models/game'
 import type { PublisherType } from './publishers.types'
+import { ReqWithFindParams } from '../../../middleware/query'
 
 export const list = async (req: Request, res: Response) => {
   try {
-    const publishersList = await Publisher.find({})
+    const publishersList = await Publisher.find(
+      {},
+      null,
+      (req as unknown as ReqWithFindParams).findParams
+    )
 
     res.send(publishersList)
   } catch (e) {
